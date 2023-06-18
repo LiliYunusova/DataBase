@@ -6,11 +6,11 @@ public class DBConnection {
     private Connection connect = null;
     private Statement statement = null;
 
-    public void connect(){
+    public  void connect(){
         try {
             connect = DriverManager
-                    .getConnection("jdbc:mysql://localhost/qa01?"
-                                + "user=root&password=password02&useSSL=true&serverTimezone=GMT");
+                    .getConnection("jdbc:mysql://localhost/aqa20?useSSL=false&serverTimezone=GMT",
+                            "root", "32kq4WxW");
             // Statements allow to issue SQL queries to the database
             statement = connect.createStatement();
         } catch (SQLException throwables) {
@@ -38,24 +38,53 @@ public class DBConnection {
         return null;
     }
 
+    public int executeQuery(String query) {
+        try {
+            return statement
+                    .executeUpdate(query);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
 
-    public static void writeResultSet(ResultSet resultSet) throws SQLException {
+    public int insertInto(String tableName, String studentName, int cityId){
+        try{
+            return statement
+                    .executeUpdate(String.format("INSERT INTO %s(name, cityid) VALUES ('%s', %d)",
+                            tableName, studentName,cityId));
+        } catch (SQLException throwables){
+            throwables.printStackTrace();
+        }
+        return 0;
+    }
+
+    public static void writeResultSetCity(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             String id = resultSet.getString("id");
-            String name = resultSet.getString("full_name");
+            String name = resultSet.getString("name");
             System.out.println("ID: " + id);
             System.out.println("NAME: " + name);
+        }
+    }
+
+    public static void writeResultSetStudents(ResultSet resultSet) throws SQLException {
+        while (resultSet.next()) {
+            String id = resultSet.getString("id");
+            String studentName = resultSet.getString("name");
+            String cityName = resultSet.getString("cityid");
+            System.out.println("ID: " + id);
+            System.out.println("NAME: " + studentName);
+            System.out.println("City" + cityName);
         }
     }
 
     // You need to close the resultSet
     public void close() {
         try {
-
             if (statement != null) {
                 statement.close();
             }
-
             if (connect != null) {
                 connect.close();
             }
