@@ -1,6 +1,7 @@
 package tests;
 
 import database.DBConnection;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.sql.ResultSet;
@@ -10,37 +11,40 @@ public class DBTest {
     private DBConnection dbConnection = new DBConnection();
 
     @Test
-    public void selectStudentsTest(){
+    public void selectStudentsTest() {
         dbConnection.connect();
         try {
             ResultSet resultSet = dbConnection.selectFrom("students");
             DBConnection.writeResultSetStudents(resultSet);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         dbConnection.close();
     }
 
     @Test
-    public void selectCityTest(){
+    public void selectCityTest() {
         dbConnection.connect();
         try {
             ResultSet resultSet = dbConnection.selectFrom("cities");
             DBConnection.writeResultSetCity(resultSet);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         dbConnection.close();
     }
 
     @Test
-    public void insertIntoStudents(){
+    public void insertIntoStudents() {
         dbConnection.connect();
-        int insertIntoStudents = dbConnection.insertInto("students", "Jack", 3);
         try {
             ResultSet resultSet = dbConnection.selectFrom("students");
-            DBConnection.writeResultSetStudents(resultSet);
-        } catch (SQLException e){
+            int expectedCountStudent = DBConnection.countStudent(resultSet);
+            dbConnection.insertInto("students", "Nike", 3);
+            ResultSet resultSet3 = dbConnection.selectFrom("students");
+            int actualCountStudents = DBConnection.countStudent(resultSet3);
+            Assert.assertEquals(actualCountStudents, expectedCountStudent + 1);
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         dbConnection.close();

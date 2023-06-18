@@ -6,7 +6,7 @@ public class DBConnection {
     private Connection connect = null;
     private Statement statement = null;
 
-    public  void connect(){
+    public void connect() {
         try {
             connect = DriverManager
                     .getConnection("jdbc:mysql://localhost/aqa20?useSSL=false&serverTimezone=GMT",
@@ -48,15 +48,23 @@ public class DBConnection {
         return 0;
     }
 
-    public int insertInto(String tableName, String studentName, int cityId){
-        try{
+    public int insertInto(String tableName, String studentName, int cityId) {
+        try {
             return statement
                     .executeUpdate(String.format("INSERT INTO %s(name, cityid) VALUES ('%s', %d)",
-                            tableName, studentName,cityId));
-        } catch (SQLException throwables){
+                            tableName, studentName, cityId));
+        } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return 0;
+    }
+
+    public static int countStudent(ResultSet resultSet) throws SQLException {
+        int count = 0;
+        while (resultSet.next()) {
+            count++;
+        }
+        return count;
     }
 
     public static void writeResultSetCity(ResultSet resultSet) throws SQLException {
@@ -88,7 +96,7 @@ public class DBConnection {
             if (connect != null) {
                 connect.close();
             }
-        }catch (Exception ignored) {
+        } catch (Exception ignored) {
         }
     }
 
