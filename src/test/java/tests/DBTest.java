@@ -38,12 +38,12 @@ public class DBTest {
     public void insertIntoStudents() {
         dbConnection.connect();
         try {
-            ResultSet resultSet = dbConnection.selectFrom("students");
-            int expectedCountStudent = DBConnection.countStudent(resultSet);
+            ResultSet resultSetBeforeInsertTable = dbConnection.selectFrom("students");
+            int expectedCountStudents = DBConnection.countStudent(resultSetBeforeInsertTable);
             dbConnection.insertInto("students", "Nike", 3);
-            ResultSet resultSet3 = dbConnection.selectFrom("students");
-            int actualCountStudents = DBConnection.countStudent(resultSet3);
-            Assert.assertEquals(actualCountStudents, expectedCountStudent + 1);
+            ResultSet resultSetAfterInsertTable = dbConnection.selectFrom("students");
+            int actualCountStudents = DBConnection.countStudent(resultSetAfterInsertTable);
+            Assert.assertEquals(actualCountStudents, expectedCountStudents + 1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
